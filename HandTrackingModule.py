@@ -63,11 +63,15 @@ class HandDetector:
             bbox = xmin, ymin, xmax, ymax
 
             if draw:
+                # bounding box
+
                 cv2.rectangle(img, (bbox[0] - 20, bbox[1] - 20), (bbox[2] + 20, bbox[3] + 20), (0, 255, 0), 2)
+
+                # hull
+
                 hull = ConvexHull(points)
 
                 hull_points = []
-
                 for vertice in hull.vertices:
                     point = points[vertice]
                     hull_points.append(point)
@@ -76,9 +80,6 @@ class HandDetector:
                 cv2.polylines(img, [hull_points_array], True, (255, 0, 0), thickness=2)
 
         return self.landmarkList, bbox
-
-    # def draw_boundary(self):
-
 
     def fingers_up(self):
         fingers = []
