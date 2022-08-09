@@ -2,7 +2,7 @@ import cv2
 import time
 import os
 
-import HandTrackingModule as htm
+import HandTrackingModule
 import LipsTrackingModule
 
 wCam, hCam = 640, 480
@@ -11,8 +11,8 @@ cap = cv2.VideoCapture(0)
 cap.set(3, wCam)
 cap.set(4, hCam)
 
-folderPath = "fingers" # name of the folder, where there are images of fingers
-fingerList = os.listdir(folderPath) # list of image titles in 'fingers' folder
+folderPath = "fingers"  # name of the folder, where there are images of fingers
+fingerList = os.listdir(folderPath)  # list of image titles in 'fingers' folder
 overlayList = []
 
 for imgPath in fingerList:
@@ -21,7 +21,7 @@ for imgPath in fingerList:
 
 pTime = 0
 
-handDetector = htm.handDetector(detectionCon=0.75)
+handDetector = HandTrackingModule.HandDetector(detectionCon=0.75)
 lipsDetector = LipsTrackingModule.LipsDetector()
 totalFingers = 0
 
@@ -31,11 +31,11 @@ while True:
 
     # hands
 
-    img = handDetector.findHands(img)
-    lmList, bbox = handDetector.findPosition(img, draw=False)
+    img = handDetector.find_hands(img)
+    lmList, bbox = handDetector.find_position(img, draw=False)
 
     if lmList:
-        fingersUp = handDetector.fingersUp()
+        fingersUp = handDetector.fingers_up()
         totalFingers = fingersUp.count(1)
 
     h, w, c = overlayList[totalFingers].shape
