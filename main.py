@@ -6,9 +6,9 @@ import LipsTrackingModule
 
 wCam, hCam = 640, 480
 
-cap = cv2.VideoCapture(0)
-cap.set(3, wCam)
-cap.set(4, hCam)
+capture = cv2.VideoCapture(0)
+capture.set(3, wCam)
+capture.set(4, hCam)
 
 pTime = 0
 
@@ -17,7 +17,7 @@ lipsDetector = LipsTrackingModule.LipsDetector()
 totalFingers = 0
 
 while True:
-    success, img = cap.read()
+    success, img = capture.read()
     img = cv2.flip(img, 1)
 
     # hands
