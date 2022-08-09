@@ -2,7 +2,7 @@ import cv2
 import mediapipe as mp
 
 
-class FaceDetector:
+class LipsDetector:
 
     def __init__(self):
         self.mpFace = mp.solutions.face_mesh
@@ -35,7 +35,7 @@ class FaceDetector:
 
 def main():
     cap = cv2.VideoCapture(0)
-    detector = FaceDetector()
+    detector = LipsDetector()
 
     while True:
         success, img = cap.read()
