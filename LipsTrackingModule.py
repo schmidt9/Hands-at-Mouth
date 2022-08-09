@@ -22,6 +22,15 @@ class LipsDetector:
         return img
 
     @staticmethod
+    def __get_lips_landmarks(img, face_landmarks, facial_area_obj):
+        for source_idx, target_idx in facial_area_obj:
+            source = face_landmarks.landmark[source_idx]
+            target = face_landmarks.landmark[target_idx]
+
+            relative_source = (int(img.shape[1] * source.x), int(img.shape[0] * source.y))
+            relative_target = (int(img.shape[1] * target.x), int(img.shape[0] * target.y))
+
+    @staticmethod
     def __plot_landmark(img, landmarks, facial_area_obj):
         for source_idx, target_idx in facial_area_obj:
             source = landmarks.landmark[source_idx]
