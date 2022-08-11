@@ -4,3 +4,5 @@ python-math
 scipy
 numpy
 shapely
+pyautogui
+pygetwindow

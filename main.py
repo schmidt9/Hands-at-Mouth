@@ -1,5 +1,7 @@
 import cv2
 import time
+import pyautogui
+import pygetwindow
 
 import GeometryHelper
 import HandTrackingModule
@@ -16,6 +18,8 @@ pTime = 0
 handDetector = HandTrackingModule.HandDetector(detectionCon=0.75)
 lipsDetector = LipsTrackingModule.LipsDetector()
 totalFingers = 0
+hand_did_enter_mouth = False
+hand_did_leave_mouth = False
 
 while True:
     success, img = capture.read()
@@ -36,8 +40,20 @@ while True:
     hand1_intersects = GeometryHelper.points_intersect(hand1_hull_points, lips_hull_points)
     hand2_intersects = GeometryHelper.points_intersect(hand2_hull_points, lips_hull_points)
 
-    if hand1_intersects or hand2_intersects:
+    is_hand_at_mouth = hand1_intersects or hand2_intersects
+
+    if is_hand_at_mouth:
         cv2.putText(img, "hand at mouth!", (20, 70), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 3)
+
+        if not hand_did_enter_mouth:
+            hand_did_enter_mouth = True
+            hand_did_leave_mouth = False
+            print("hand_did_enter_mouth")
+
+    if not is_hand_at_mouth and hand_did_enter_mouth:
+        hand_did_enter_mouth = False
+        hand_did_leave_mouth = True
+        print("hand_did_leave_mouth")
 
     # fps
 
