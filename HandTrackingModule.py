@@ -70,8 +70,8 @@ class HandDetector:
                 # hull
 
                 hull = ConvexHull(points)
-
                 hull_points = []
+
                 for vertice in hull.vertices:
                     point = points[vertice]
                     hull_points.append(point)

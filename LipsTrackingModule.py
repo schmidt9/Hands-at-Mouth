@@ -16,13 +16,18 @@ class LipsDetector:
 
         if items:
             for landmarks in items:
+                points = self.__get_lips_points(img, landmarks, self.mpFace.FACEMESH_LIPS)
                 # https://sefiks.com/2022/01/14/deep-face-detection-with-mediapipe/
-                self.__plot_landmark(img, landmarks, self.mpFace.FACEMESH_LIPS)
+                self.__plot_all_points(img, points)
+
+
 
         return img
 
     @staticmethod
-    def __get_lips_landmarks(img, face_landmarks, facial_area_obj):
+    def __get_lips_points(img, face_landmarks, facial_area_obj):
+        points = []
+
         for source_idx, target_idx in facial_area_obj:
             source = face_landmarks.landmark[source_idx]
             target = face_landmarks.landmark[target_idx]
@@ -30,16 +35,15 @@ class LipsDetector:
             relative_source = (int(img.shape[1] * source.x), int(img.shape[0] * source.y))
             relative_target = (int(img.shape[1] * target.x), int(img.shape[0] * target.y))
 
+            points.append(relative_source)
+            points.append(relative_target)
+
+        return points
+
     @staticmethod
-    def __plot_landmark(img, landmarks, facial_area_obj):
-        for source_idx, target_idx in facial_area_obj:
-            source = landmarks.landmark[source_idx]
-            target = landmarks.landmark[target_idx]
-
-            relative_source = (int(img.shape[1] * source.x), int(img.shape[0] * source.y))
-            relative_target = (int(img.shape[1] * target.x), int(img.shape[0] * target.y))
-
-            cv2.line(img, relative_source, relative_target, (255, 255, 255), thickness=2)
+    def __plot_all_points(img, points):
+        for i in range(0, len(points), 2):
+            cv2.line(img, points[i], points[i + 1], (255, 255, 255), thickness=2)
 
 
 def main():
