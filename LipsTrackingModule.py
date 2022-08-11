@@ -1,7 +1,6 @@
 import cv2
 import mediapipe as mp
-import numpy
-from scipy.spatial import ConvexHull
+from ConvexHullHelper import ConvexHullHelper
 
 
 class LipsDetector:
@@ -22,17 +21,8 @@ class LipsDetector:
                 # https://sefiks.com/2022/01/14/deep-face-detection-with-mediapipe/
                 self.__plot_all_points(img, points)
 
-                # hull
-
-                hull = ConvexHull(points)
-                hull_points = []
-
-                for vertice in hull.vertices:
-                    point = points[vertice]
-                    hull_points.append(point)
-
-                hull_points_array = numpy.array(hull_points).reshape((-1, 1, 2))
-                cv2.polylines(img, [hull_points_array], True, (255, 0, 0), thickness=2)
+                hull_points = ConvexHullHelper.get_hull_points(points)
+                ConvexHullHelper.plot_polylines(img, hull_points)
 
         return img
 

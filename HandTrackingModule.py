@@ -1,8 +1,7 @@
 import cv2
 import mediapipe as mp
 import time
-import numpy
-from scipy.spatial import ConvexHull
+from ConvexHullHelper import ConvexHullHelper
 
 
 class HandDetector:
@@ -62,21 +61,10 @@ class HandDetector:
             bbox = xmin, ymin, xmax, ymax
 
             if draw:
-                # bounding box
-
                 cv2.rectangle(img, (bbox[0] - 20, bbox[1] - 20), (bbox[2] + 20, bbox[3] + 20), (0, 255, 0), 2)
 
-                # hull
-
-                hull = ConvexHull(points)
-                hull_points = []
-
-                for vertice in hull.vertices:
-                    point = points[vertice]
-                    hull_points.append(point)
-
-                hull_points_array = numpy.array(hull_points).reshape((-1, 1, 2))
-                cv2.polylines(img, [hull_points_array], True, (255, 0, 0), thickness=2)
+                hull_points = ConvexHullHelper.get_hull_points(points)
+                ConvexHullHelper.plot_polylines(img, hull_points)
 
         return self.landmarkList, bbox
 

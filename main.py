@@ -23,7 +23,7 @@ while True:
     # hands
 
     img = handDetector.find_hands(img)
-    lmList, bbox = handDetector.find_position(img, draw=False)
+    lmList, bbox = handDetector.find_position(img, draw=True)
 
     if lmList:
         fingersUp = handDetector.fingers_up()
