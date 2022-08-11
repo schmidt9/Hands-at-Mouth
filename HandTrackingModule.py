@@ -38,6 +38,7 @@ class HandDetector:
         yList = []
         bbox = []
         self.landmarkList = []
+        hull_points = []
 
         if self.results.multi_hand_landmarks:
             myHand = self.results.multi_hand_landmarks[handNo]
@@ -94,10 +95,7 @@ def main():
     while True:
         success, img = cap.read()
         img = detector.find_hands(img)
-        landmarkList = detector.find_position(img)
-
-        if len(landmarkList) != 0:
-            print(landmarkList[1])
+        detector.find_position(img)
 
         cTime = time.time()
         fps = 1. / (cTime - pTime)

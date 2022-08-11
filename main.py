@@ -1,6 +1,7 @@
 import cv2
 import time
 
+import GeometryHelper
 import HandTrackingModule
 import LipsTrackingModule
 
@@ -35,6 +36,13 @@ while True:
     # lips
 
     img, lips_hull_points = lipsDetector.find_lips(img)
+
+    # intersection
+
+    hulls_intersect = GeometryHelper.points_intersect(hand_hull_points, lips_hull_points)
+
+    if hulls_intersect:
+        print("hulls intersect")
 
     # fps
 
