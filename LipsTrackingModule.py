@@ -1,6 +1,6 @@
 import cv2
 import mediapipe as mp
-from ConvexHullHelper import ConvexHullHelper
+import GeometryHelper
 
 
 class LipsDetector:
@@ -15,16 +15,18 @@ class LipsDetector:
         results = self.faceMash.process(imgRGB)
         items = results.multi_face_landmarks
 
+        hull_points = []
+
         if items:
             for landmarks in items:
                 points = self.__get_lips_points(img, landmarks, self.mpFace.FACEMESH_LIPS)
                 # https://sefiks.com/2022/01/14/deep-face-detection-with-mediapipe/
                 self.__plot_all_points(img, points)
 
-                hull_points = ConvexHullHelper.get_hull_points(points)
-                ConvexHullHelper.plot_polylines(img, hull_points)
+                hull_points = GeometryHelper.get_hull_points(points)
+                GeometryHelper.plot_polylines(img, hull_points)
 
-        return img
+        return img, hull_points
 
     @staticmethod
     def __get_lips_points(img, face_landmarks, facial_area_obj):

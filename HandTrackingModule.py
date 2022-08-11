@@ -1,7 +1,7 @@
 import cv2
 import mediapipe as mp
 import time
-from ConvexHullHelper import ConvexHullHelper
+import GeometryHelper
 
 
 class HandDetector:
@@ -60,13 +60,13 @@ class HandDetector:
             ymin, ymax = min(yList), max(yList)
             bbox = xmin, ymin, xmax, ymax
 
+            hull_points = GeometryHelper.get_hull_points(points)
+
             if draw:
                 cv2.rectangle(img, (bbox[0] - 20, bbox[1] - 20), (bbox[2] + 20, bbox[3] + 20), (0, 255, 0), 2)
+                GeometryHelper.plot_polylines(img, hull_points)
 
-                hull_points = ConvexHullHelper.get_hull_points(points)
-                ConvexHullHelper.plot_polylines(img, hull_points)
-
-        return self.landmarkList, bbox
+        return self.landmarkList, bbox, hull_points
 
     def fingers_up(self):
         fingers = []

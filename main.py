@@ -23,7 +23,7 @@ while True:
     # hands
 
     img = handDetector.find_hands(img)
-    lmList, bbox = handDetector.find_position(img, draw=True)
+    lmList, bbox, hand_hull_points = handDetector.find_position(img, draw=True)
 
     if lmList:
         fingersUp = handDetector.fingers_up()
@@ -34,7 +34,7 @@ while True:
 
     # lips
 
-    img = lipsDetector.find_lips(img)
+    img, lips_hull_points = lipsDetector.find_lips(img)
 
     # fps
 
