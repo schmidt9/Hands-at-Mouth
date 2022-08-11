@@ -24,7 +24,6 @@ class HandDetector:
     def find_hands(self, img, draw=True):
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.hands.process(imgRGB)
-        # print(results.multi_hand_landmarks)
 
         if self.results.multi_hand_landmarks:
             for handLms in self.results.multi_hand_landmarks:
@@ -33,7 +32,7 @@ class HandDetector:
 
         return img
 
-    def find_position(self, img, handNo=0, draw=True):
+    def find_position(self, img, hand_index=0, draw=True):
         xList = []
         yList = []
         bbox = []
@@ -41,11 +40,14 @@ class HandDetector:
         hull_points = []
 
         if self.results.multi_hand_landmarks:
-            myHand = self.results.multi_hand_landmarks[handNo]
+
+            if hand_index > len(self.results.multi_hand_landmarks) - 1:
+                return self.landmarkList, bbox, hull_points
+
+            hand = self.results.multi_hand_landmarks[hand_index]
             points = []
 
-            for id, lm in enumerate(myHand.landmark):
-                # print(id, lm)
+            for id, lm in enumerate(hand.landmark):
                 h, w, c = img.shape
                 cx, cy = int(lm.x * w), int(lm.y * h)
                 xList.append(cx)
@@ -68,23 +70,6 @@ class HandDetector:
                 GeometryHelper.plot_polylines(img, hull_points)
 
         return self.landmarkList, bbox, hull_points
-
-    def fingers_up(self):
-        fingers = []
-
-        # Thumb
-        if self.landmarkList[self.tipIds[0]][1] < self.landmarkList[self.tipIds[0] - 1][1]:
-            fingers.append(1)
-        else:
-            fingers.append(0)
-
-        # 4 Fingers
-        for id in range(1, 5):
-            if self.landmarkList[self.tipIds[id]][2] < self.landmarkList[self.tipIds[id] - 2][2]:
-                fingers.append(1)
-            else:
-                fingers.append(0)
-        return fingers
 
 
 def main():

@@ -24,14 +24,8 @@ while True:
     # hands
 
     img = handDetector.find_hands(img)
-    lmList, bbox, hand_hull_points = handDetector.find_position(img, draw=True)
-
-    if lmList:
-        fingersUp = handDetector.fingers_up()
-        totalFingers = fingersUp.count(1)
-
-    cv2.rectangle(img, (20, 225), (170, 425), (0, 255, 0), cv2.FILLED)
-    cv2.putText(img, str(totalFingers), (45, 375), cv2.FONT_HERSHEY_PLAIN, 10, (255, 0, 0), 25)
+    _, _, hand1_hull_points = handDetector.find_position(img, draw=True, hand_index=0)
+    _, _, hand2_hull_points = handDetector.find_position(img, draw=True, hand_index=1)
 
     # lips
 
@@ -39,10 +33,11 @@ while True:
 
     # intersection
 
-    hulls_intersect = GeometryHelper.points_intersect(hand_hull_points, lips_hull_points)
+    hand1_intersects = GeometryHelper.points_intersect(hand1_hull_points, lips_hull_points)
+    hand2_intersects = GeometryHelper.points_intersect(hand2_hull_points, lips_hull_points)
 
-    if hulls_intersect:
-        print("hulls intersect")
+    if hand1_intersects or hand2_intersects:
+        cv2.putText(img, "hand at mouth!", (20, 70), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 3)
 
     # fps
 
