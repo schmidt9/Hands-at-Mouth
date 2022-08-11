@@ -1,11 +1,11 @@
 import cv2
 import time
-import pyautogui
-import pygetwindow
 
 import GeometryHelper
 import HandTrackingModule
 import LipsTrackingModule
+from HandsAtMouthHandler import HandsAtMouthHandler
+from WindowMinimizer import WindowMinimizer
 
 wCam, hCam = 640, 480
 
@@ -17,9 +17,8 @@ pTime = 0
 
 handDetector = HandTrackingModule.HandDetector(detectionCon=0.75)
 lipsDetector = LipsTrackingModule.LipsDetector()
-totalFingers = 0
-hand_did_enter_mouth = False
-hand_did_leave_mouth = False
+handler = HandsAtMouthHandler()
+handler.add_listener(WindowMinimizer())
 
 while True:
     success, img = capture.read()
@@ -44,16 +43,7 @@ while True:
 
     if is_hand_at_mouth:
         cv2.putText(img, "hand at mouth!", (20, 70), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 3)
-
-        if not hand_did_enter_mouth:
-            hand_did_enter_mouth = True
-            hand_did_leave_mouth = False
-            print("hand_did_enter_mouth")
-
-    if not is_hand_at_mouth and hand_did_enter_mouth:
-        hand_did_enter_mouth = False
-        hand_did_leave_mouth = True
-        print("hand_did_leave_mouth")
+        handler.handle_hands_at_mouth()
 
     # fps
 
