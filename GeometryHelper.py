@@ -17,7 +17,7 @@ def get_hull_points(points):
 
 def plot_polylines(img, points):
     hull_points_array = numpy.array(points).reshape((-1, 1, 2))
-    cv2.polylines(img, [hull_points_array], True, (255, 0, 0), thickness=2)
+    cv2.polylines(img, [hull_points_array], True, (0, 0, 255), thickness=1)
 
 
 def points_intersect(points1, points2):
