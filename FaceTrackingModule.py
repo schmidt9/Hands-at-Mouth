@@ -19,7 +19,7 @@ class FaceDetector:
 
         if items:
             for landmarks in items:
-                points = self.__get_face_mesh_connection_points(img, landmarks, self.mp_face_mash.FACEMESH_LIPS)
+                points = self.__get_face_mesh_connection_points(img, landmarks, self.face_mash_connection)
                 # https://sefiks.com/2022/01/14/deep-face-detection-with-mediapipe/
                 self.__plot_points(img, points)
 
