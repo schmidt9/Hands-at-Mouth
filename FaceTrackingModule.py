@@ -5,9 +5,9 @@ import GeometryHelper
 
 class FaceDetector:
 
-    def __init__(self):
+    def __init__(self, refine_landmarks=False):
         self.mp_face_mash = mp.solutions.face_mesh
-        self.face_mash = self.mp_face_mash.FaceMesh()
+        self.face_mash = self.mp_face_mash.FaceMesh(refine_landmarks=refine_landmarks)
         self.face_mash_connection = self.mp_face_mash.FACEMESH_CONTOURS
 
     def find_face_mesh_connection(self, img):
@@ -53,7 +53,9 @@ class FaceDetector:
 class IrisesDetector(FaceDetector):
 
     def __init__(self):
-        super().__init__()
+        # we set refine_landmarks=True here
+        # to avoid 'index out of bounds error' in __get_face_mesh_connection_points
+        super().__init__(refine_landmarks=True)
         self.face_mash_connection = self.mp_face_mash.FACEMESH_IRISES
 
 
@@ -65,12 +67,19 @@ class LipsDetector(FaceDetector):
 
 
 def main():
-    cap = cv2.VideoCapture(0)
-    detector = LipsDetector()
+    wCam, hCam = 640, 480
+    capture = cv2.VideoCapture(0)
+    capture.set(3, wCam)
+    capture.set(4, hCam)
+
+    lips_detector = LipsDetector()
+    irises_detector = IrisesDetector()
 
     while True:
-        success, img = cap.read()
-        img = detector.find_lips(img)
+        success, img = capture.read()
+        img = cv2.flip(img, 1)
+        img, _ = lips_detector.find_face_mesh_connection(img)
+        img, _ = irises_detector.find_face_mesh_connection(img)
         cv2.imshow("Image", img)
         cv2.waitKey(1)
 

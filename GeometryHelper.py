@@ -5,8 +5,11 @@ from shapely.geometry import Polygon
 
 
 def get_hull_points(points):
-    hull = ConvexHull(points)
+    if len(points) == 0:
+        return []
+
     hull_points = []
+    hull = ConvexHull(points)
 
     for vertice in hull.vertices:
         point = points[vertice]
