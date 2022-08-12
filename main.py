@@ -3,7 +3,7 @@ import time
 
 import GeometryHelper
 import HandTrackingModule
-import LipsTrackingModule
+import FaceTrackingModule
 from HandsAtMouthHandler import HandsAtMouthHandler
 from WindowMinimizer import WindowMinimizer
 
@@ -16,7 +16,7 @@ capture.set(4, hCam)
 pTime = 0
 
 handDetector = HandTrackingModule.HandDetector(min_detection_confidence=0.75)
-lipsDetector = LipsTrackingModule.LipsDetector()
+lipsDetector = FaceTrackingModule.LipsDetector()
 
 handler = HandsAtMouthHandler()
 handler.add_listener(WindowMinimizer("Google Chrome"))
@@ -33,7 +33,7 @@ while True:
 
     # lips
 
-    img, lips_hull_points = lipsDetector.find_lips(img)
+    img, lips_hull_points = lipsDetector.find_face_mesh_connection(img)
 
     # intersection
 
