@@ -9,13 +9,14 @@ class FaceDetector:
         self.mp_face_mash = mp.solutions.face_mesh
         self.face_mash = self.mp_face_mash.FaceMesh(refine_landmarks=refine_landmarks)
         self.face_mash_connection = self.mp_face_mash.FACEMESH_CONTOURS
+        self.hull_points = []
 
     def find_face_mesh_connection(self, img):
         img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         results = self.face_mash.process(img_rgb)
         items = results.multi_face_landmarks
 
-        hull_points = []
+        self.hull_points = []
 
         if items:
             for landmarks in items:
@@ -23,10 +24,10 @@ class FaceDetector:
                 # https://sefiks.com/2022/01/14/deep-face-detection-with-mediapipe/
                 self.__plot_points(img, points)
 
-                hull_points = GeometryHelper.get_hull_points(points)
-                GeometryHelper.plot_polylines(img, hull_points)
+                self.hull_points = GeometryHelper.get_hull_points(points)
+                GeometryHelper.plot_polylines(img, self.hull_points)
 
-        return img, hull_points
+        return img, self.hull_points
 
     @staticmethod
     def __get_face_mesh_connection_points(img, face_landmarks, face_mesh_connection):
@@ -56,7 +57,31 @@ class IrisesDetector(FaceDetector):
         # we set refine_landmarks=True here
         # to avoid 'index out of bounds error' in __get_face_mesh_connection_points
         super().__init__(refine_landmarks=True)
-        self.face_mash_connection = self.mp_face_mash.FACEMESH_IRISES
+        self.pixel_sunglasses_image = self.__class__.__read_pixel_sunglasses_image()
+        self.left_iris_hull_points = []
+        self.right_iris_hull_points = []
+
+    def find_face_mesh_connection(self, img):
+        self.face_mash_connection = self.mp_face_mash.FACEMESH_LEFT_IRIS
+        _, self.left_iris_hull_points = super().find_face_mesh_connection(img)
+
+        self.face_mash_connection = self.mp_face_mash.FACEMESH_RIGHT_IRIS
+        _, self.right_iris_hull_points = super().find_face_mesh_connection(img)
+
+        return img, self.hull_points
+
+    def show_pixel_sunglasses_image(self, img):
+        # resize sunglasses to fit eyes
+
+        # w, h, _ = img.shape
+        # img[0:w, 0:h] = self.pixel_sunglasses_image
+        return img
+
+    @staticmethod
+    def __read_pixel_sunglasses_image():
+        image_name = "pixel_sunglasses.png"
+        image_dir = "img"
+        return cv2.imread(f'{image_dir}/{image_name}')
 
 
 class LipsDetector(FaceDetector):
@@ -80,6 +105,7 @@ def main():
         img = cv2.flip(img, 1)
         img, _ = lips_detector.find_face_mesh_connection(img)
         img, _ = irises_detector.find_face_mesh_connection(img)
+        img = irises_detector.show_pixel_sunglasses_image(img)
         cv2.imshow("Image", img)
         cv2.waitKey(1)
 
