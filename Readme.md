@@ -1,14 +1,14 @@
-# Finger Counter
-In this project I am going to learn how to count fingers. 
-I first look into hand tracking and then I will use the hand landmarks to count of the fingers.
+# Hands at Mouth
+Based on [Finger Counter](https://github.com/paveldat/finger_counter), https://habr.com/ru/post/679460/
 
 ## Features
-* Can track your hand in real-time
-* Can show the number of fingers raised
+* Track lips and 2 hands in real-time using [MediaPipe framework](https://google.github.io/mediapipe/) 
+* Detect cases where a hand touches/overlaps/covers lips using areas intersection detection
+* Execute custom action on intersection event (as an example executes Google Chrome window minimization on Windows)
 
 ## How to install
 1. Clone this repository on your computer
-`https://github.com/paveldat/finger_counter.git`
+`https://github.com/schmidt9/Hands-at-Mouth.git`
 2. Install all the requirements
 `run libraries.bat` or
 `pip install -r requirements.txt`
@@ -16,13 +16,10 @@ I first look into hand tracking and then I will use the hand landmarks to count 
 `python main.py`
 
 ## Help
-You might face issue with webcam not showing and you get errors.
+You might face issue with webcam not showing, and you get errors.
 To solve it just change the value in this line (for example to `1`).
-`cap = cv2.VideoCapture(0)`
+`capture = cv2.VideoCapture(0)`
 Increment this number until you see your webcam.
 
-## Hand Landmarks
-<img src="https://github.com/paveldat/gesture_volume_control/blob/main/img/HandLandmarks.png">
-
 ## Result
-<img src="https://github.com/paveldat/finger_counter/blob/main/img/result.gif">
+TODO
