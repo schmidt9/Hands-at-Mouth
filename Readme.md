@@ -1,5 +1,5 @@
 # Hands at Mouth
-Based on [Finger Counter](https://github.com/paveldat/finger_counter), https://habr.com/ru/post/679460/
+Based on [Finger Counter](https://github.com/paveldat/finger_counter), see also article https://habr.com/ru/post/679460/
 
 ## Features
 * Track lips and 2 hands in real-time using [MediaPipe framework](https://google.github.io/mediapipe/) 
