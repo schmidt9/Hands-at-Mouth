@@ -6,20 +6,19 @@ import GeometryHelper
 class LipsDetector:
 
     def __init__(self):
-        self.mpFace = mp.solutions.face_mesh
-        self.faceMash = self.mpFace.FaceMesh()
-        self.mpDraw = mp.solutions.drawing_utils
+        self.mp_face_mash = mp.solutions.face_mesh
+        self.face_mash = self.mp_face_mash.FaceMesh()
 
     def find_lips(self, img):
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        results = self.faceMash.process(imgRGB)
+        results = self.face_mash.process(imgRGB)
         items = results.multi_face_landmarks
 
         hull_points = []
 
         if items:
             for landmarks in items:
-                points = self.__get_lips_points(img, landmarks, self.mpFace.FACEMESH_LIPS)
+                points = self.__get_lips_points(img, landmarks, self.mp_face_mash.FACEMESH_LIPS)
                 # https://sefiks.com/2022/01/14/deep-face-detection-with-mediapipe/
                 self.__plot_all_points(img, points)
 
