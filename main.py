@@ -15,10 +15,11 @@ capture.set(4, hCam)
 
 pTime = 0
 
-handDetector = HandTrackingModule.HandDetector(detectionCon=0.75)
+handDetector = HandTrackingModule.HandDetector(min_detection_confidence=0.75)
 lipsDetector = LipsTrackingModule.LipsDetector()
+
 handler = HandsAtMouthHandler()
-handler.add_listener(WindowMinimizer())
+handler.add_listener(WindowMinimizer("Google Chrome"))
 
 while True:
     success, img = capture.read()

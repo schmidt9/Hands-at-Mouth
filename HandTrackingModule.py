@@ -6,16 +6,18 @@ import GeometryHelper
 
 class HandDetector:
 
-    def __init__(self, mode=False, maxHands=2, modelComplexity=1, detectionCon=0.5, trackCon=0.5):
-        self.mode = mode
-        self.maxHands = maxHands
-        self.modelComplexity = modelComplexity
-        self.detectionCon = detectionCon
-        self.trackCon = trackCon
-
-        self.mpHands = mp.solutions.hands
-        self.hands = self.mpHands.Hands(self.mode, self.maxHands, self.modelComplexity, self.detectionCon,
-                                        self.trackCon)
+    def __init__(self,
+                 static_image_mode=False,
+                 max_num_hands=2,
+                 model_complexity=1,
+                 min_detection_confidence=0.5,
+                 min_tracking_confidence=0.5):
+        self.mp_hands = mp.solutions.hands
+        self.hands = self.mp_hands.Hands(static_image_mode,
+                                         max_num_hands,
+                                         model_complexity,
+                                         min_detection_confidence,
+                                         min_tracking_confidence)
         self.mpDraw = mp.solutions.drawing_utils
         self.tipIds = [4, 8, 12, 16, 20]
 
@@ -28,7 +30,7 @@ class HandDetector:
         if self.results.multi_hand_landmarks:
             for handLms in self.results.multi_hand_landmarks:
                 if draw:
-                    self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS)
+                    self.mpDraw.draw_landmarks(img, handLms, self.mp_hands.HAND_CONNECTIONS)
 
         return img
 
