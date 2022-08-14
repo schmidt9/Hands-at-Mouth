@@ -1,7 +1,7 @@
 import cv2
 import time
 
-import GeometryHelper
+import GeometryUtils
 import HandTrackingModule
 import FaceTrackingModule
 from HandsAtMouthHandler import HandsAtMouthHandler
@@ -42,8 +42,8 @@ while True:
 
     # intersection
 
-    hand1_intersects = GeometryHelper.points_intersect(hand1_hull_points, lips_hull_points)
-    hand2_intersects = GeometryHelper.points_intersect(hand2_hull_points, lips_hull_points)
+    hand1_intersects = GeometryUtils.points_intersect(hand1_hull_points, lips_hull_points)
+    hand2_intersects = GeometryUtils.points_intersect(hand2_hull_points, lips_hull_points)
 
     is_hand_at_mouth = hand1_intersects or hand2_intersects
 

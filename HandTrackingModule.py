@@ -1,7 +1,7 @@
 import cv2
 import mediapipe as mp
 import time
-import GeometryHelper
+import GeometryUtils
 
 
 class HandDetector:
@@ -65,11 +65,11 @@ class HandDetector:
             ymin, ymax = min(yList), max(yList)
             bbox = xmin, ymin, xmax, ymax
 
-            hull_points = GeometryHelper.get_hull_points(points)
+            hull_points = GeometryUtils.get_hull_points(points)
 
             if draw:
                 cv2.rectangle(img, (bbox[0] - 20, bbox[1] - 20), (bbox[2] + 20, bbox[3] + 20), (0, 255, 0), 2)
-                GeometryHelper.plot_polylines(img, hull_points)
+                GeometryUtils.plot_polylines(img, hull_points)
 
         return self.landmarkList, bbox, hull_points
 

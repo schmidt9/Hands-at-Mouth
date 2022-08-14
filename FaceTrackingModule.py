@@ -4,7 +4,7 @@ import cv2
 import mediapipe as mp
 import numpy
 
-import GeometryHelper
+import GeometryUtils
 
 
 class FaceDetector:
@@ -28,8 +28,8 @@ class FaceDetector:
                 # https://sefiks.com/2022/01/14/deep-face-detection-with-mediapipe/
                 self.__plot_points(img, points)
 
-                self.hull_points = GeometryHelper.get_hull_points(points)
-                GeometryHelper.plot_polylines(img, self.hull_points)
+                self.hull_points = GeometryUtils.get_hull_points(points)
+                GeometryUtils.plot_polylines(img, self.hull_points)
 
         return img, self.hull_points
 
@@ -81,15 +81,15 @@ class IrisesDetector(FaceDetector):
         width_scale_factor = 2.0
         height_scale_factor = 2.0
 
-        left_iris_center = GeometryHelper.centroid(self.left_iris_hull_points)
-        right_iris_center = GeometryHelper.centroid(self.right_iris_hull_points)
+        left_iris_center = GeometryUtils.centroid(self.left_iris_hull_points)
+        right_iris_center = GeometryUtils.centroid(self.right_iris_hull_points)
 
         if left_iris_center.is_empty or right_iris_center.is_empty:
             return img
 
         irises_distance = abs(left_iris_center.x - right_iris_center.x)
         # using enclosing size here to get the same height on head tilt
-        irises_height = GeometryHelper.min_enclosing_circle_size(self.right_iris_hull_points)
+        irises_height = GeometryUtils.min_enclosing_circle_size(self.right_iris_hull_points)
 
         new_image_width = int(irises_distance * width_scale_factor)
         new_image_height = int(irises_height * height_scale_factor)
