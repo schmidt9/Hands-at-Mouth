@@ -22,6 +22,12 @@ def centroid(points):
     return Polygon(points).centroid
 
 
+def min_enclosing_size(points):
+    arr = numpy.array(points)
+    _, radius = cv2.minEnclosingCircle(arr)
+    return radius * 2
+
+
 def plot_polylines(img, points):
     hull_points_array = numpy.array(points).reshape((-1, 1, 2))
     cv2.polylines(img, [hull_points_array], True, (0, 0, 255), thickness=1)

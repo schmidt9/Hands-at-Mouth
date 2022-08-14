@@ -74,20 +74,20 @@ class IrisesDetector(FaceDetector):
 
     def add_pixel_sunglasses_image(self, img):
         # resize sunglasses to fit eyes
-        resize_factor = 2.0
+        width_scale_factor = 2.0
+        height_scale_factor = 2.0
 
         left_iris_center = GeometryHelper.centroid(self.left_iris_hull_points)
         right_iris_center = GeometryHelper.centroid(self.right_iris_hull_points)
-        irises_distance = abs(left_iris_center.x - right_iris_center.x)
 
         if left_iris_center.is_empty or right_iris_center.is_empty:
             return img
 
-        new_image_width = int(irises_distance * resize_factor)
+        irises_distance = abs(left_iris_center.x - right_iris_center.x)
+        irises_height = GeometryHelper.min_enclosing_size(self.left_iris_hull_points)
 
-        orig_height, orig_width = self.pixel_sunglasses_image.shape[:2]
-        scale_ratio = new_image_width / orig_width
-        new_image_height = int(orig_height * scale_ratio)
+        new_image_width = int(irises_distance * width_scale_factor)
+        new_image_height = int(irises_height * height_scale_factor)
 
         resized_image = cv2.resize(self.pixel_sunglasses_image,
                                    (new_image_width, new_image_height),
