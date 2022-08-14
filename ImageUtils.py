@@ -1,3 +1,7 @@
+import cv2
+import numpy
+
+
 def rotate_image(image, angle, center=None, scale=1.0):
     (h, w) = image.shape[:2]
 
