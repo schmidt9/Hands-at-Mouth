@@ -22,7 +22,7 @@ def centroid(points):
     return Polygon(points).centroid
 
 
-def min_enclosing_size(points):
+def min_enclosing_circle_size(points):
     arr = numpy.array(points)
     _, radius = cv2.minEnclosingCircle(arr)
     return radius * 2

@@ -1,3 +1,5 @@
+import math
+
 import cv2
 import mediapipe as mp
 import numpy
@@ -73,7 +75,9 @@ class IrisesDetector(FaceDetector):
         return img, self.hull_points
 
     def add_pixel_sunglasses_image(self, img):
-        # resize sunglasses to fit eyes
+
+        # resize image to fit eyes area
+
         width_scale_factor = 2.0
         height_scale_factor = 2.0
 
@@ -84,7 +88,8 @@ class IrisesDetector(FaceDetector):
             return img
 
         irises_distance = abs(left_iris_center.x - right_iris_center.x)
-        irises_height = GeometryHelper.min_enclosing_size(self.left_iris_hull_points)
+        # using enclosing size here to get the same height on head tilt
+        irises_height = GeometryHelper.min_enclosing_circle_size(self.right_iris_hull_points)
 
         new_image_width = int(irises_distance * width_scale_factor)
         new_image_height = int(irises_height * height_scale_factor)
@@ -93,12 +98,38 @@ class IrisesDetector(FaceDetector):
                                    (new_image_width, new_image_height),
                                    interpolation=cv2.INTER_AREA)
 
+        # position image based on right iris position
+
         x = int(right_iris_center.x - ((new_image_width - irises_distance) / 2))
         y = int(right_iris_center.y - (new_image_height / 2))
+
+        # rotate image around right iris on head tilt
+
+        tilt_degrees = math.degrees(math.atan2(
+            left_iris_center.x - right_iris_center.x,
+            left_iris_center.y - right_iris_center.y) - math.pi / 2)
+        print(tilt_degrees)
+
+        center = (0, 0)
+        resized_image = self.__class__.rotate_image(resized_image, tilt_degrees, center)
+
+        # combine images
 
         img = self.__class__.add_transparent_image(img, resized_image, x, y)
 
         return img
+
+    @staticmethod
+    def rotate_image(image, angle, center=None, scale=1.0):
+        (h, w) = image.shape[:2]
+
+        if center is None:
+            center = (w / 2, h / 2)
+
+        matrix = cv2.getRotationMatrix2D(center, angle, scale)
+        rotated = cv2.warpAffine(image, matrix, (w, h))
+
+        return rotated
 
     @staticmethod
     def add_transparent_image(background, foreground, x_offset=None, y_offset=None):
