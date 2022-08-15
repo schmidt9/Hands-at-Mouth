@@ -8,13 +8,15 @@ def rotate_image(image, angle, center=None, scale=1.0):
     if center is None:
         center = (w / 2, h / 2)
 
-    matrix = cv2.getRotationMatrix2D(center, angle, scale)
-    rotated = cv2.warpAffine(image, matrix, (w, h))
+    rotation_matrix = cv2.getRotationMatrix2D(center, angle, scale)
+    rotated = cv2.warpAffine(image,
+                             rotation_matrix,
+                             (w, h * 2))
 
     return rotated
 
 
-def add_transparent_image(background, foreground, x_offset=None, y_offset=None):
+def add_transparent_image(background, foreground, x_offset=None, y_offset=None, angle=0, center=None):
     """
     https://stackoverflow.com/a/71701023/3004003
     """
@@ -54,6 +56,8 @@ def add_transparent_image(background, foreground, x_offset=None, y_offset=None):
 
     # combine the background with the overlay image weighted by alpha
     composite = background_subsection * (1 - alpha_mask) + foreground_colors * alpha_mask
+
+    # composite = rotate_image(composite, angle, center)
 
     # overwrite the section of the background image that has been updated
     background[bg_y:bg_y + h, bg_x:bg_x + w] = composite

@@ -1,6 +1,7 @@
 import math
 import cv2
 import mediapipe as mp
+import cvzone
 import GeometryUtils
 import ImageUtils
 
@@ -113,7 +114,8 @@ class IrisesDetector(FaceDetector):
 
         # combine images
 
-        img = ImageUtils.add_transparent_image(img, resized_image, x, y)
+        # img = ImageUtils.add_transparent_image(img, resized_image, x, y, tilt_degrees, center)
+        img = cvzone.overlayPNG(img, resized_image, [x, y])
 
         return img
 
