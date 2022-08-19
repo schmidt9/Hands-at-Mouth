@@ -2,27 +2,6 @@ import cv2
 import numpy
 
 
-def rotate_image(image, angle, center=None, scale=1.0):
-    (h, w) = image.shape[:2]
-
-    if center is None:
-        center = (w / 2, h / 2)
-
-    fi = numpy.deg2rad(angle)
-    rotated_height = int(w * abs(numpy.sin(fi)) + h * abs(numpy.cos(fi)))
-    rotated_width = int(w * abs(numpy.cos(fi)) + h * abs(numpy.sin(fi)))
-    print(h, rotated_height, w, rotated_width)
-
-    rotation_matrix = cv2.getRotationMatrix2D(center, angle, scale)
-    rotated = cv2.warpAffine(image,
-                             rotation_matrix,
-                             (rotated_width, rotated_height))
-
-    cv2.boundingRect(rotated)
-
-    return rotated
-
-
 def add_transparent_image(background, foreground, x_offset=None, y_offset=None, angle=0, center=None):
     """
     https://stackoverflow.com/a/71701023/3004003
