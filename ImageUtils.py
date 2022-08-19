@@ -8,10 +8,17 @@ def rotate_image(image, angle, center=None, scale=1.0):
     if center is None:
         center = (w / 2, h / 2)
 
+    fi = numpy.deg2rad(angle)
+    rotated_height = int(w * abs(numpy.sin(fi)) + h * abs(numpy.cos(fi)))
+    rotated_width = int(w * abs(numpy.cos(fi)) + h * abs(numpy.sin(fi)))
+    print(h, rotated_height, w, rotated_width)
+
     rotation_matrix = cv2.getRotationMatrix2D(center, angle, scale)
     rotated = cv2.warpAffine(image,
                              rotation_matrix,
-                             (w, h * 2))
+                             (rotated_width, rotated_height))
+
+    cv2.boundingRect(rotated)
 
     return rotated
 
