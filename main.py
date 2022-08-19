@@ -17,7 +17,6 @@ pTime = 0
 
 handDetector = HandTrackingModule.HandDetector(min_detection_confidence=0.75)
 lipsDetector = FaceTrackingModule.LipsDetector()
-irisesDetector = FaceTrackingModule.IrisesDetector()
 
 handler = HandsAtMouthHandler()
 handler.add_listener(WindowMinimizer("Google Chrome"))
@@ -35,10 +34,6 @@ while True:
     # lips
 
     img, lips_hull_points = lipsDetector.find_face_mesh_connection(img)
-
-    # irises
-
-    img, _ = irisesDetector.find_face_mesh_connection(img)
 
     # intersection
 
