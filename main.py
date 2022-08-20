@@ -1,5 +1,6 @@
 import cv2
 import time
+import sys
 
 import GeometryUtils
 import HandTrackingModule
@@ -7,11 +8,33 @@ import FaceTrackingModule
 from HandsAtMouthHandler import HandsAtMouthHandler
 from WindowMinimizer import WindowMinimizer
 
+# process options
+
+opts = [opt for opt in sys.argv[1:] if opt.startswith("--")]
+no_gui = False
+
+if "--no-gui" in opts:
+    no_gui = True
+elif "--help" in opts:
+    print(f'Usage: {sys.argv[0]} (--help | --no-gui)\n'
+          f'-- help Show this help\n'
+          f'-- no-gui Start in windowless mode\n'
+          f'If no params specified starts in GUI mode')
+    exit(0)
+
+with_gui = not no_gui
+
+print("Staring in windowless mode" if no_gui else "Starting in GUI mode")
+
+# setup
+
 wCam, hCam = 640, 480
 
 capture = cv2.VideoCapture(0)
-capture.set(3, wCam)
-capture.set(4, hCam)
+
+if with_gui:
+    capture.set(3, wCam)
+    capture.set(4, hCam)
 
 pTime = 0
 
@@ -21,9 +44,13 @@ lipsDetector = FaceTrackingModule.LipsDetector()
 handler = HandsAtMouthHandler()
 handler.add_listener(WindowMinimizer("Google Chrome"))
 
+# run
+
 while True:
     success, img = capture.read()
-    img = cv2.flip(img, 1)
+
+    if with_gui:
+        img = cv2.flip(img, 1)
 
     # hands
 
@@ -43,17 +70,23 @@ while True:
     is_hand_at_mouth = hand1_intersects or hand2_intersects
 
     if is_hand_at_mouth:
-        cv2.putText(img, "hand at mouth!", (20, 70), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 3)
+        print("Hands At Mouth!")
+
         handler.handle_hands_at_mouth()
 
-    # fps
+        if with_gui:
+            cv2.putText(img, "hand at mouth!", (20, 70), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 3)
 
-    cTime = time.time()
-    fps = 1 / (cTime-pTime)
-    pTime = cTime
-    cv2.putText(img, f'FPS: {int(fps)}', (400, 70), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
+    if with_gui:
+        # fps
 
-    # result
+        cTime = time.time()
+        fps = 1 / (cTime-pTime)
+        pTime = cTime
+        cv2.putText(img, f'FPS: {int(fps)}', (400, 70), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
 
-    cv2.imshow("Image", img)
+        # result
+
+        cv2.imshow("Image", img)
+
     cv2.waitKey(1)
