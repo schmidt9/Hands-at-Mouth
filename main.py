@@ -21,9 +21,9 @@ elif "--topmost" in opts and not no_gui:
     print("Starting in topmost mode")
 elif "--help" in opts:
     print(f'Usage: {sys.argv[0]} (--help | --no-gui)\n'
-          f'-- help Show this help\n'
-          f'-- no-gui Start in windowless mode\n'
-          f'-- topmost If in GUI mode show window on top\n'
+          f'--help Show this help\n'
+          f'--no-gui Start in windowless mode\n'
+          f'--topmost If in GUI mode show window on top\n'
           f'If no params specified starts in GUI mode')
     exit(0)
 
