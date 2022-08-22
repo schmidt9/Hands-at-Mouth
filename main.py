@@ -1,6 +1,7 @@
 import cv2
 import time
 import sys
+import argparse
 
 import GeometryUtils
 import HandTrackingModule
@@ -11,35 +12,37 @@ from WindowMinimizer import WindowMinimizer
 # process options
 
 opts = [opt for opt in sys.argv[1:] if opt.startswith("--")]
-no_gui = False
-topmost = False
+values = [opt for opt in sys.argv[1:] if not opt.startswith("--")]
+window_size = (640, 480)
 
-if "--no-gui" in opts:
-    no_gui = True
-elif "--topmost" in opts and not no_gui:
-    topmost = True
-    print("Starting in topmost mode")
-elif "--help" in opts:
-    print(f'Usage: {sys.argv[0]} (--help | --no-gui)\n'
-          f'--help Show this help\n'
-          f'--no-gui Start in windowless mode\n'
-          f'--topmost If in GUI mode show window on top\n'
-          f'If no params specified starts in GUI mode')
-    exit(0)
+arg_parser = argparse.ArgumentParser()
+arg_parser.add_argument("--no-gui", help="Start in windowless mode", action='store_true')
+arg_parser.add_argument("--topmost", help="If in GUI mode show window on top", action='store_true')
+arg_parser.add_argument("--window-size",
+                        help=f"Window size specified as tuple (width, height)",
+                        default=f"({window_size[0]},{window_size[1]})")
+
+args = arg_parser.parse_args()
+
+no_gui = args.no_gui
+topmost = args.topmost
+window_size = eval(args.window_size)
 
 with_gui = not no_gui
 
 print("Staring in windowless mode" if no_gui else "Starting in GUI mode")
 
+if with_gui and topmost:
+    print("Starting in topmost mode")
+
 # setup
 
-wCam, hCam = 640, 480
 window_name = "Image"
 capture = cv2.VideoCapture(0)
 
 if with_gui:
-    capture.set(3, wCam)
-    capture.set(4, hCam)
+    capture.set(3, window_size[0])
+    capture.set(4, window_size[1])
 
 pTime = 0
 
