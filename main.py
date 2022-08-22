@@ -14,19 +14,24 @@ from WindowMinimizer import WindowMinimizer
 opts = [opt for opt in sys.argv[1:] if opt.startswith("--")]
 values = [opt for opt in sys.argv[1:] if not opt.startswith("--")]
 window_size = (640, 480)
+window_position = (400, 400)
 
 arg_parser = argparse.ArgumentParser()
-arg_parser.add_argument("--no-gui", help="Start in windowless mode", action='store_true')
+arg_parser.add_argument("--no-gui", help="Start in windowless (no GUI) mode", action='store_true')
 arg_parser.add_argument("--topmost", help="If in GUI mode show window on top", action='store_true')
 arg_parser.add_argument("--window-size",
-                        help=f"Window size specified as tuple (width, height)",
+                        help=f"Window size specified as tuple (width, height). Works in GUI mode",
                         default=f"({window_size[0]},{window_size[1]})")
+arg_parser.add_argument("--window-position",
+                        help="Window position specified as tuple (x, y). Works in GUI mode",
+                        default=f"({window_position[0]},{window_position[1]})")
 
 args = arg_parser.parse_args()
 
 no_gui = args.no_gui
 topmost = args.topmost
 window_size = eval(args.window_size)
+window_position = eval(args.window_position)
 with_gui = not no_gui
 
 print("Staring in windowless mode" if no_gui else "Starting in GUI mode")
@@ -34,11 +39,11 @@ print("Staring in windowless mode" if no_gui else "Starting in GUI mode")
 if with_gui and topmost:
     print("Starting in topmost mode")
 
-print(f"Window size {window_size}")
+print(f"Window size {window_size}, position {window_position}")
 
 # setup
 
-window_name = "Image"
+window_name = "Hand At Mouth"
 capture = cv2.VideoCapture(0)
 
 if with_gui:
@@ -92,7 +97,7 @@ while True:
         cTime = time.time()
         fps = 1 / (cTime-pTime)
         pTime = cTime
-        cv2.putText(img, f'FPS: {int(fps)}', (400, 70), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
+        cv2.putText(img, f'FPS: {int(fps)}', (20, 30), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 2)
 
         # result
 
@@ -101,4 +106,7 @@ while True:
         if topmost:
             cv2.setWindowProperty(window_name, cv2.WND_PROP_TOPMOST, 1)
 
+        cv2.moveWindow(window_name, window_position[0], window_position[1])
+
     cv2.waitKey(1)
+    cv2.destroyAllWindows()
