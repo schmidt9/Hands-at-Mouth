@@ -27,13 +27,14 @@ args = arg_parser.parse_args()
 no_gui = args.no_gui
 topmost = args.topmost
 window_size = eval(args.window_size)
-
 with_gui = not no_gui
 
 print("Staring in windowless mode" if no_gui else "Starting in GUI mode")
 
 if with_gui and topmost:
     print("Starting in topmost mode")
+
+print(f"Window size {window_size}")
 
 # setup
 
