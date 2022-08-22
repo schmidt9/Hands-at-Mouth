@@ -12,13 +12,18 @@ from WindowMinimizer import WindowMinimizer
 
 opts = [opt for opt in sys.argv[1:] if opt.startswith("--")]
 no_gui = False
+topmost = False
 
 if "--no-gui" in opts:
     no_gui = True
+elif "--topmost" in opts and not no_gui:
+    topmost = True
+    print("Starting in topmost mode")
 elif "--help" in opts:
     print(f'Usage: {sys.argv[0]} (--help | --no-gui)\n'
           f'-- help Show this help\n'
           f'-- no-gui Start in windowless mode\n'
+          f'-- topmost If in GUI mode show window on top\n'
           f'If no params specified starts in GUI mode')
     exit(0)
 
@@ -29,7 +34,7 @@ print("Staring in windowless mode" if no_gui else "Starting in GUI mode")
 # setup
 
 wCam, hCam = 640, 480
-
+window_name = "Image"
 capture = cv2.VideoCapture(0)
 
 if with_gui:
@@ -87,6 +92,9 @@ while True:
 
         # result
 
-        cv2.imshow("Image", img)
+        cv2.imshow(window_name, img)
+
+        if topmost:
+            cv2.setWindowProperty(window_name, cv2.WND_PROP_TOPMOST, 1)
 
     cv2.waitKey(1)
