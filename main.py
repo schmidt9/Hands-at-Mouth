@@ -109,4 +109,3 @@ while True:
         cv2.moveWindow(window_name, window_position[0], window_position[1])
 
     cv2.waitKey(1)
-    cv2.destroyAllWindows()
