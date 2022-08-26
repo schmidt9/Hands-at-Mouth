@@ -46,13 +46,15 @@ print(f"Window size {window_size}, position {window_position}")
 window_name = "Hand At Mouth"
 capture = cv2.VideoCapture(0)
 
+capture_size = (800, 600)
+
 if with_gui:
-    capture.set(3, window_size[0])
-    capture.set(4, window_size[1])
+    capture.set(3, capture_size[0])
+    capture.set(4, capture_size[1])
 
 pTime = 0
 
-handDetector = HandTrackingModule.HandDetector(min_detection_confidence=0.75)
+handDetector = HandTrackingModule.HandDetector()
 lipsDetector = FaceTrackingModule.LipsDetector()
 
 handler = HandsAtMouthHandler()
@@ -83,6 +85,10 @@ while True:
 
     is_hand_at_mouth = hand1_intersects or hand2_intersects
 
+    img = cv2.resize(img,
+                     (window_size[0], window_size[1]),
+                     interpolation=cv2.INTER_AREA)
+
     if is_hand_at_mouth:
         print("Hands At Mouth!")
 
@@ -95,7 +101,7 @@ while True:
         # fps
 
         cTime = time.time()
-        fps = 1 / (cTime-pTime)
+        fps = 1 / (cTime - pTime)
         pTime = cTime
         cv2.putText(img, f'FPS: {int(fps)}', (20, 30), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 2)
 

@@ -5,9 +5,16 @@ import GeometryUtils
 
 class FaceDetector:
 
-    def __init__(self, refine_landmarks=False):
+    def __init__(self,
+                 refine_landmarks=False,
+                 min_detection_confidence=0.5,
+                 min_tracking_confidence=0.5):
         self.mp_face_mash = mp.solutions.face_mesh
-        self.face_mash = self.mp_face_mash.FaceMesh(refine_landmarks=refine_landmarks)
+        self.face_mash = self.mp_face_mash.FaceMesh(
+            refine_landmarks=refine_landmarks,
+            min_detection_confidence=min_detection_confidence,
+            min_tracking_confidence=min_tracking_confidence
+        )
         self.face_mash_connection = self.mp_face_mash.FACEMESH_CONTOURS
         self.hull_points = []
 
@@ -53,8 +60,13 @@ class FaceDetector:
 
 class LipsDetector(FaceDetector):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self,
+                 refine_landmarks=False,
+                 min_detection_confidence=0.5,
+                 min_tracking_confidence=0.5):
+        super().__init__(refine_landmarks=refine_landmarks,
+                         min_detection_confidence=min_detection_confidence,
+                         min_tracking_confidence=min_tracking_confidence)
         self.face_mash_connection = self.mp_face_mash.FACEMESH_LIPS
 
 
